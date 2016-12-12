@@ -34,6 +34,17 @@ class HeliumPanelController : NSWindowController {
         }
     }
     
+    var lock: Bool = false {
+        didSet {
+            if lock {
+                panel.styleMask = NSResizableWindowMask
+            } else {
+                panel.styleMask = NSTexturedBackgroundWindowMask
+                NSLog("unlocking")
+            }
+        }
+    }
+    
     
     var panel: NSPanel! {
         get {
@@ -65,6 +76,16 @@ class HeliumPanelController : NSWindowController {
         else {
             sender.state = NSOnState
             didEnableTranslucency()
+        }
+    }
+    
+    @IBAction func lockPress(sender: NSMenuItem) {
+        if sender.state == NSOnState {
+            sender.state = NSOffState
+            didDisableLock()
+        } else {
+            sender.state = NSOnState
+            didEnableLock()
         }
     }
     
@@ -153,6 +174,14 @@ class HeliumPanelController : NSWindowController {
     
     func didDisableTranslucency() {
         translucent = false
+    }
+    
+    func didEnableLock(){
+        lock = true
+    }
+    
+    func didDisableLock(){
+        lock = false
     }
     
     func didUpdateAlpha(newAlpha: NSNumber) {
